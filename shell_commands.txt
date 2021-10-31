@@ -1,0 +1,12 @@
+﻿רשימת פקודות לתרגיל Shell
+
+
+dir
+cd
+md
+echo
+hello.py
+Hex_dump
+pipe
+Redirection
+grep/find
