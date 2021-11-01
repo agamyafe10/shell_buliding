@@ -21,9 +21,8 @@ def print_dir(dire):
         print(det)
     
 
-def change_dir():
+def change_dir(direc):
     # change directory
-    direc = input("enter path")
     try:
         os.chdir(direc)
         print("directory changed to" + direc)
@@ -31,14 +30,32 @@ def change_dir():
         print("CHANGING DID NOT WORK")
 
 
-def make_dir():
+def make_dir(dir_name, dir_path):
     """create a new directory with the path and name recieved from the client"""
-    dir_name = input("enter the wanted directoy name")
-    dir_path = input("enter the wanted directory path")
     path = os.path.join(dir_path, dir_name)
     print(path)
     try: 
         os.mkdir(path)# creating the actuall directory
-        print("Directory '%s' created" dir_name)
+        print("Directory '%s' created", dir_name)
     except:
         print("FAILED CREATING DIRECTORY")
+
+
+def echo(str_list):
+    "echos"
+    my_str = ""
+    for word in str_list:
+        my_str += word + " "
+    print(my_str.upper())
+
+
+def hello_py():
+    try:
+        exec(open("hello.py").read())
+    except:
+        print("THERE WAS AN ERROR RUNNING THE FILE")
+
+def HexDump(path):  
+    decimal_representation = int(open(path).read(), 2)
+    hexadecimal_string = hex(decimal_representation)
+    print(hexadecimal_string)
