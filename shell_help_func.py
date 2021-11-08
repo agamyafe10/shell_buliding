@@ -36,7 +36,7 @@ def make_dir(dir_name, dir_path):
     print(path)
     try: 
         os.mkdir(path)# creating the actuall directory
-        print("Directory '%s' created", dir_name)
+        print("Directory %s created" %dir_name)
     except:
         print("FAILED CREATING DIRECTORY")
 
@@ -59,3 +59,16 @@ def HexDump(path):
     decimal_representation = int(open(path).read(), 2)
     hexadecimal_string = hex(decimal_representation)
     print(hexadecimal_string)
+
+
+def find(word, path):
+    """sumary_line"""
+    print("THE PATH:", path)
+    print("THE WORD:", word)
+    wanted_file = open(path, "r")
+    for line in wanted_file:
+        if word in line:
+            print(line)
+
+
+# def pipe(func1, func2):
