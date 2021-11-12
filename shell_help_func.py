@@ -14,12 +14,22 @@ def is_command_file(file_name):
     return flag
 
 
+def get_curr_dir():
+    "change the global variable to the currents dir and return the current directory as a string"
+    global curr_dir
+    curr_dir = os.getcwd()# get the current directory
+    # print("the current directory is" + curr_dir)
+    return curr_dir
+ 
+
 def print_dir(dire):
     """prints a list of all the files and libraries in the current directory"""
     my_dir= os.listdir(dire)
+    dir_str = ""
     for det in my_dir:
+        dir_str += det + "\n"
         print(det)
-    
+    return my_dir
 
 def change_dir(direc):
     # change directory
@@ -61,14 +71,99 @@ def HexDump(path):
     print(hexadecimal_string)
 
 
-def find(word, path):
-    """sumary_line"""
-    print("THE PATH:", path)
-    print("THE WORD:", word)
-    wanted_file = open(path, "r")
-    for line in wanted_file:
-        if word in line:
-            print(line)
+def redirect(cmd):
+    """redirects the str into a new file
+
+    Args:
+        cmd (str): the command
+    """
+    files = cmd.split(">")
+    files[1] = files[1].replace(" ", "")
+    try:
+        new_file = open(files[1], 'w')
+        new_file.write(files[0])
+        new_file.close()
+    except:
+        print("Error: the file was not found :(")
 
 
-# def pipe(func1, func2):
+def find(word, txt="", path=""):
+    """takes a txt file in str and if the word is found it prints the line with the word
+
+    Args:
+        word (str): the requested word
+        txt (str): the txt we need to find it in
+        path (str): the path the file we want to serch is in
+    """
+    # in case path was recieved
+    if txt == "":
+        wanted_file = open(path, "r")
+        for line in wanted_file:
+            if word in line:
+                print(line)
+    # in case string was recieved
+    else:
+        for line in txt:
+            if word in line:
+                print(line)
+
+
+def func_switcher(cmd, cmd_det):
+    is_command_file(cmd)
+    # GOING THROUGH ALL THE CMD OPTIONS
+    if cmd == "dir":
+        get_curr_dir()
+        return print_dir(curr_dir)
+    elif cmd == "cd":
+        change_dir(cmd_det[1])
+        get_curr_dir()
+    elif cmd == "md":
+        make_dir(cmd_det[1], cmd_det[2])        
+    elif cmd == "echo":
+        echo(cmd_det[1:])
+    elif cmd == "hello.py":
+        hello_py()
+    elif cmd == "Hex_dump":
+        HexDump(cmd_det[1])
+    elif cmd == "find":
+        print("i am here bitches")
+        if len(cmd_det) == 3:# if it is find with a path to a file
+            find(cmd_det[1].strip('"'), "", cmd_det[2])
+        else:# if it is find called through piping
+            find(cmd_det[1].strip('"'), cmd_det[0], "")
+
+def split_cmd(command):
+    """responsible for spliting the base cmd recieved from the client
+
+    Args:
+        command (str): the client's command
+
+    Returns:
+        cmd: the command name
+        command_split: list of the command parts
+    """
+    command_split = command.split(" ")
+    cmd = command_split[0]
+    return cmd, command_split
+
+def pipe(func1, func2):
+    """take the output of the first command and givei t to the second command as an argument
+
+    Args:
+        func1 (str): the first command
+        func2 (str): the second command
+    """
+    # handke the command spliting
+    try:
+        cmd, command_split = split_cmd(func1)# devides to cmd itself and a list includes all the part of the command icluding the cmd
+        first_command_output = func_switcher(cmd, command_split)
+    except:
+        print("ERROR - FIRST COMMAND WENT WRONG")
+    try:
+        cmd, command_split = split_cmd(func2)# devides to cmd itself and a list includes all the part of the command icluding the cmd
+        command_split[0] = first_command_output# replaces in the list the func1 output eith the cmd
+        func_switcher(cmd, command_split)
+    except:
+        print("EROOR - SECOND COMMAND WENT WRONG")
+
+
