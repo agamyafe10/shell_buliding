@@ -1,10 +1,11 @@
 import os
+import pathlib
 
 def is_command_file(file_name):
     """going thrue the library and file if file_name is actually a file' id so it runs it"""
     
     flag = False
-    for root, dirs, files in os.walk('C:/Users/cyber/Desktop/agam', topdown=False):
+    for root, dirs, files in os.walk(pathlib.Path(__file__).parent.resolve(), topdown=False):
         for name in files:            
             if name == file_name:
                 flag = True
@@ -66,7 +67,7 @@ def hello_py():
         print("THERE WAS AN ERROR RUNNING THE FILE")
 
 def HexDump(path):  
-    decimal_representation = int(open(path).read(), 2)
+    decimal_representation = int(open(path, 'rb').read(), 2)
     hexadecimal_string = hex(decimal_representation)
     print(hexadecimal_string)
 
@@ -126,7 +127,6 @@ def func_switcher(cmd, cmd_det):
     elif cmd == "Hex_dump":
         HexDump(cmd_det[1])
     elif cmd == "find":
-        print("i am here bitches")
         if len(cmd_det) == 3:# if it is find with a path to a file
             find(cmd_det[1].strip('"'), "", cmd_det[2])
         else:# if it is find called through piping
