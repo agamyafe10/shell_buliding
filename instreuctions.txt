@@ -1,0 +1,12 @@
+שינינו את כל מה שאמרת , יש פה הערות על איך להשתמש בפונקציות שהערת עליהן
+instructions: 
+1. in order to use the command "md" you need to write md  "name_of_folder" "root"
+for example: md temp C:\School 
+2. in order to run a pyhton file you need to write- python "name_of_file"
+for example: python hello.py
+3. in order to run the command "Hex_dump" you need to write- Hex_dump "file_path"
+for example: Hex_dump C:\School\Senior\Cyber
+4. in order to usew the "find" command you need to write find "your_word" "path_of file"
+for example: find "HELLO" C:\School\Senior\Cyber\shell_buliding\hello.py
+5. in order to try running the piping method: find "C" C:\School\Senior\Cyber\shell_buliding\idot.txt | cd
+אין שימוש במשתנה סביבה כיוון שהפונקציה אוטמטית מחפשת בספרייה הנוכחית

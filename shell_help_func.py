@@ -30,13 +30,12 @@ def print_dir(dire):
     for det in my_dir:
         dir_str += det + "\n"
         print(det)
-    return my_dir
-
+    return dir_str
 def change_dir(direc):
     # change directory
     try:
         os.chdir(direc)
-        print("directory changed to" + direc)
+        print("Directory changed to: " + get_curr_dir())
     except:
         print("CHANGING DID NOT WORK")
 
@@ -57,7 +56,7 @@ def echo(str_list):
     my_str = ""
     for word in str_list:
         my_str += word + " "
-    print(my_str.upper())
+    print(my_str)
 
 
 def hello_py():
@@ -80,13 +79,29 @@ def redirect(cmd):
     """
     files = cmd.split(">")
     files[1] = files[1].replace(" ", "")
+    if files[0][-1] == " ":
+        files[0] = files[0][:len(files[0])-1]
+    cmd, command_split = split_cmd(files[0])
+    new_file_text = func_switcher(cmd, command_split)
+    if new_file_text == -1:
+        new_file_text = files[0]
     try:
         new_file = open(files[1], 'w')
-        new_file.write(files[0])
+        new_file.write(new_file_text)
         new_file.close()
     except:
         print("Error: the file was not found :(")
 
+def is_our_func(func):
+    """check if the the func exists
+
+    Args:
+        func (str): [description]
+    """
+    our_func_lst = ["dir"]
+    if func in our_func_lst:
+        return True
+    return False
 
 def find(word, txt="", path=""):
     """takes a txt file in str and if the word is found it prints the line with the word
@@ -97,27 +112,34 @@ def find(word, txt="", path=""):
         path (str): the path the file we want to serch is in
     """
     # in case path was recieved
+    lines_found = ""
     if txt == "":
         wanted_file = open(path, "r")
         for line in wanted_file:
             if word in line:
                 print(line)
+                lines_found += line + " "
     # in case string was recieved
     else:
         for line in txt:
             if word in line:
                 print(line)
-
+                lines_found += line + " "
+    return lines_found
 
 def func_switcher(cmd, cmd_det):
-    is_command_file(cmd)
+    
     # GOING THROUGH ALL THE CMD OPTIONS
-    if cmd == "dir":
-        get_curr_dir()
-        return print_dir(curr_dir)
+    if cmd == "python":
+        is_command_file(cmd_det[1])
+    elif cmd == "dir":
+        if len(cmd_det) == 1:
+            get_curr_dir()
+            return print_dir(curr_dir)
+        else:# אם הלקוח ביקש ספרייה אחרת
+            return print_dir(cmd_det[1])
     elif cmd == "cd":
         change_dir(cmd_det[1])
-        get_curr_dir()
     elif cmd == "md":
         make_dir(cmd_det[1], cmd_det[2])        
     elif cmd == "echo":
@@ -128,10 +150,10 @@ def func_switcher(cmd, cmd_det):
         HexDump(cmd_det[1])
     elif cmd == "find":
         if len(cmd_det) == 3:# if it is find with a path to a file
-            find(cmd_det[1].strip('"'), "", cmd_det[2])
+            return find(cmd_det[1].strip('"'), "", cmd_det[2])
         else:# if it is find called through piping
-            find(cmd_det[1].strip('"'), cmd_det[0], "")
-
+            return find(cmd_det[1].strip('"'), cmd_det[0], "")
+    return -1
 def split_cmd(command):
     """responsible for spliting the base cmd recieved from the client
 
@@ -160,8 +182,8 @@ def pipe(func1, func2):
     except:
         print("ERROR - FIRST COMMAND WENT WRONG")
     try:
-        cmd, command_split = split_cmd(func2)# devides to cmd itself and a list includes all the part of the command icluding the cmd
-        command_split[0] = first_command_output# replaces in the list the func1 output eith the cmd
+        cmd, command_split = split_cmd(func2 + " " + first_command_output)# devides to cmd itself and a list includes all the part of the command icluding the cmd
+        # command_split[0] = first_command_output# replaces in the list the func1 output eith the cmd
         func_switcher(cmd, command_split)
     except:
         print("EROOR - SECOND COMMAND WENT WRONG")

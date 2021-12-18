@@ -1,0 +1,9 @@
+.git
+hello.py
+instreuctions.txt
+print.py
+shell_building.py
+shell_commands.txt
+shell_help_func.py
+shell_instructions.pdf
+__pycache__
